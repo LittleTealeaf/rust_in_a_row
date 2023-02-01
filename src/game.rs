@@ -1,18 +1,12 @@
-#[derive(PartialEq, Clone, Copy)]
-pub enum Player {
-    A,
-    B,
+pub enum Tile {
+    Empty,
+    Player(usize),
 }
 
 pub enum GameState {
-    Decisive(Player),
-    Draw,
+    Winner(usize),
     InProgress,
-}
-
-pub enum Tile {
-    Empty,
-    Player(Player),
+    Draw,
 }
 
 pub struct Game {
@@ -20,21 +14,23 @@ pub struct Game {
     height: usize,
     width: usize,
     win_length: usize,
+    players: usize,
 }
 
 impl Game {
-    pub fn new(width: usize, height: usize, win_length: usize) -> Game {
+    pub fn new(width: usize, height: usize, win_length: usize, players: usize) -> Game {
         let mut board = Vec::new();
 
-        for _ in 0..(height * width) {
+        for _ in 0..(width * height) {
             board.push(Tile::Empty);
         }
 
         Game {
+            board,
             width,
             height,
             win_length,
-            board,
+            players,
         }
     }
 
@@ -46,7 +42,7 @@ impl Game {
         }
     }
 
-    pub fn set(&mut self, x: usize, y: usize, player: Player) -> bool {
+    pub fn put(&mut self, x: usize, y: usize, player: usize) -> bool {
         if let Some(tile) = self.get(x, y) {
             if let Tile::Empty = tile {
                 self.board[y * self.width + x] = Tile::Player(player);
@@ -57,56 +53,48 @@ impl Game {
     }
 
     pub fn winner(&self) -> GameState {
-        let mut has_space = false;
-        for x in 0..(self.width as isize) {
-            for y in 0..(self.height as isize) {
-                if let Tile::Player(player) = &self.board[(y * self.width as isize + x) as usize] {
+        let mut move_possible = false;
+        let height = self.height as isize;
+        let width = self.width as isize;
+        let win_length = self.win_length as isize;
+        for x in 0..width {
+            for y in 0..height {
+                if let Tile::Player(player) = &self.board[(y * width + x) as usize] {
                     'directions: for (dx, dy) in [(-1, 0), (-1, 1), (0, -1), (-1, -1)] {
-                        let end = x + dx * self.win_length as isize;
-                        if end >= self.width as isize || end < 0 {
+                        let end = x + dx * (win_length - 1);
+                        if end >= width || end < 0 {
                             continue 'directions;
                         }
-                        let end = y + dy * self.win_length as isize;
-                        if end >= self.height as isize || end < 0 {
+                        let end = y + dy * (win_length - 1);
+                        if end >= height || end < 0 {
                             continue 'directions;
                         }
 
-                        'step: for i in 0..(self.win_length as isize) {
+                        for i in 0..win_length {
                             let tx = (x + dx * i) as usize;
                             let ty = (y + dy * i) as usize;
 
                             if let Tile::Player(p) = &self.board[ty * self.width + tx] {
-                                if p.eq(player) {
-                                    continue 'step;
+                                if p != player {
+                                    continue 'directions;
                                 }
+                            } else {
+                                continue 'directions;
                             }
-
-                            if i == self.win_length as isize - 1 {
-                                return GameState::Decisive(player.clone());
-                            }
-
-                            continue 'directions;
                         }
+
+                        return GameState::Winner(player.clone());
                     }
                 } else {
-                    has_space = true;
+                    move_possible = true;
                 }
             }
         }
 
-        if has_space {
+        if move_possible {
             GameState::InProgress
         } else {
             GameState::Draw
         }
     }
-}
-
-#[cfg(tests)]
-mod tests {
-    use super::*;
-
-
-
-
 }
