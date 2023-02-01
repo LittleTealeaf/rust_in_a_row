@@ -43,6 +43,7 @@ impl Game {
     }
 
     pub fn put(&mut self, x: usize, y: usize, player: usize) -> bool {
+        assert!(player < self.players);
         if let Some(tile) = self.get(x, y) {
             if let Tile::Empty = tile {
                 self.board[y * self.width + x] = Tile::Player(player);
@@ -96,5 +97,16 @@ impl Game {
         } else {
             GameState::Draw
         }
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn new_game() {
+        let game = Game::new(6,6,4,2);
     }
 }
