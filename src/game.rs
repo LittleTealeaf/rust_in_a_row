@@ -17,6 +17,11 @@ pub struct Game {
     players: usize,
 }
 
+pub enum GamePutError {
+    IndexOutOfBounds,
+    PositionNotEmpty
+}
+
 impl Game {
     pub fn new(width: usize, height: usize, win_length: usize, players: usize) -> Game {
         let mut board = Vec::new();
@@ -42,15 +47,18 @@ impl Game {
         }
     }
 
-    pub fn put(&mut self, x: usize, y: usize, player: usize) -> bool {
+    pub fn put(&mut self, x: usize, y: usize, player: usize) -> Result<(), GamePutError> {
         assert!(player < self.players);
         if let Some(tile) = self.get(x, y) {
             if let Tile::Empty = tile {
                 self.board[y * self.width + x] = Tile::Player(player);
-                return true;
+                Ok(())
+            } else {
+                Err(GamePutError::PositionNotEmpty)
             }
+        } else {
+            Err(GamePutError::IndexOutOfBounds)
         }
-        false
     }
 
     pub fn winner(&self) -> GameState {
