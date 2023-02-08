@@ -1,3 +1,14 @@
+
+
+pub mod Errors {
+    pub enum PutError {
+        IndexOutOfBounds,
+        PositionNotEmpty,
+        PlayerOutOfRange
+    }
+}
+
+
 pub enum Tile {
     Empty,
     Player(usize),
@@ -15,11 +26,6 @@ pub struct Game {
     width: usize,
     win_length: usize,
     players: usize,
-}
-
-pub enum GamePutError {
-    IndexOutOfBounds,
-    PositionNotEmpty
 }
 
 impl Game {
@@ -47,17 +53,19 @@ impl Game {
         }
     }
 
-    pub fn put(&mut self, x: usize, y: usize, player: usize) -> Result<(), GamePutError> {
-        assert!(player < self.players);
+    pub fn put(&mut self, x: usize, y: usize, player: usize) -> Result<(), Errors::PutError> {
+        if player >= self.players {
+            return Err(Errors::PutError::PlayerOutOfRange);
+        }
         if let Some(tile) = self.get(x, y) {
             if let Tile::Empty = tile {
                 self.board[y * self.width + x] = Tile::Player(player);
                 Ok(())
             } else {
-                Err(GamePutError::PositionNotEmpty)
+                Err(Errors::PutError::PositionNotEmpty)
             }
         } else {
-            Err(GamePutError::IndexOutOfBounds)
+            Err(Errors::PutError::IndexOutOfBounds)
         }
     }
 
