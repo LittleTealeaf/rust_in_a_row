@@ -142,53 +142,77 @@ mod tests {
 
     #[test]
     fn create_game() {
-        assert!(match Game::new(10, 10, 5, 2) {
-            Ok(_) => true,
-            _ => false,
-        });
+        assert!(
+            match Game::new(10, 10, 5, 2) {
+                Ok(_) => true,
+                _ => false,
+            },
+            "Valid game configurations should return an OK value"
+        );
     }
 
     #[test]
     fn new_game_not_enough_players() {
-        assert!(match Game::new(10, 10, 5, 0) {
-            Err(errors::NewGameError::NotEnoughPlayers) => true,
-            _ => false,
-        });
+        assert!(
+            match Game::new(10, 10, 5, 0) {
+                Err(errors::NewGameError::NotEnoughPlayers) => true,
+                _ => false,
+            },
+            "A new game cannot have 0 players"
+        );
 
-        assert!(match Game::new(10, 10, 5, 1) {
-            Err(errors::NewGameError::NotEnoughPlayers) => true,
-            _ => false,
-        });
+        assert!(
+            match Game::new(10, 10, 5, 1) {
+                Err(errors::NewGameError::NotEnoughPlayers) => true,
+                _ => false,
+            },
+            "A new game cannot have 1 player"
+        );
     }
 
     #[test]
     fn new_game_invalid_dimensions() {
-        assert!(match Game::new(0, 10, 5, 3) {
-            Err(errors::NewGameError::InvalidDimensions) => true,
-            _ => false,
-        });
+        assert!(
+            match Game::new(0, 10, 5, 3) {
+                Err(errors::NewGameError::InvalidDimensions) => true,
+                _ => false,
+            },
+            "A new game cannot have 0 width"
+        );
 
-        assert!(match Game::new(10, 0, 5, 3) {
-            Err(errors::NewGameError::InvalidDimensions) => true,
-            _ => false,
-        });
+        assert!(
+            match Game::new(10, 0, 5, 3) {
+                Err(errors::NewGameError::InvalidDimensions) => true,
+                _ => false,
+            },
+            "A new game cannot have 0 height"
+        );
     }
 
     #[test]
     fn new_game_impossible_win_length() {
-        assert!(match Game::new(5, 5, 10, 2) {
-            Err(errors::NewGameError::ImpossibleWinLength) => true,
-            _ => false,
-        });
+        assert!(
+            match Game::new(5, 5, 10, 2) {
+                Err(errors::NewGameError::ImpossibleWinLength) => true,
+                _ => false,
+            },
+            "A new game cannot have a win length greater than any dimension"
+        );
 
-        assert!(match Game::new(5, 12, 10, 2) {
-            Err(errors::NewGameError::ImpossibleWinLength) => false,
-            _ => true,
-        });
+        assert!(
+            match Game::new(5, 12, 10, 2) {
+                Err(errors::NewGameError::ImpossibleWinLength) => false,
+                _ => true,
+            },
+            "A new game should be allowed with height > win length > width"
+        );
 
-        assert!(match Game::new(12, 5, 10, 2) {
-            Err(errors::NewGameError::ImpossibleWinLength) => false,
-            _ => true,
-        });
+        assert!(
+            match Game::new(12, 5, 10, 2) {
+                Err(errors::NewGameError::ImpossibleWinLength) => false,
+                _ => true,
+            },
+            "A new game should be allowed with width > win length > height"
+        );
     }
 }
