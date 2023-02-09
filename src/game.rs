@@ -141,7 +141,54 @@ mod tests {
     use super::*;
 
     #[test]
-    fn new_game() {
-        let game = Game::new(6, 6, 4, 2);
+    fn create_game() {
+        assert!(match Game::new(10, 10, 5, 2) {
+            Ok(_) => true,
+            _ => false,
+        });
+    }
+
+    #[test]
+    fn new_game_not_enough_players() {
+        assert!(match Game::new(10, 10, 5, 0) {
+            Err(errors::NewGameError::NotEnoughPlayers) => true,
+            _ => false,
+        });
+
+        assert!(match Game::new(10, 10, 5, 1) {
+            Err(errors::NewGameError::NotEnoughPlayers) => true,
+            _ => false,
+        });
+    }
+
+    #[test]
+    fn new_game_invalid_dimensions() {
+        assert!(match Game::new(0, 10, 5, 3) {
+            Err(errors::NewGameError::InvalidDimensions) => true,
+            _ => false,
+        });
+
+        assert!(match Game::new(10, 0, 5, 3) {
+            Err(errors::NewGameError::InvalidDimensions) => true,
+            _ => false,
+        });
+    }
+
+    #[test]
+    fn new_game_impossible_win_length() {
+        assert!(match Game::new(5, 5, 10, 2) {
+            Err(errors::NewGameError::ImpossibleWinLength) => true,
+            _ => false,
+        });
+
+        assert!(match Game::new(5, 12, 10, 2) {
+            Err(errors::NewGameError::ImpossibleWinLength) => false,
+            _ => true,
+        });
+
+        assert!(match Game::new(12, 5, 10, 2) {
+            Err(errors::NewGameError::ImpossibleWinLength) => false,
+            _ => true,
+        });
     }
 }
