@@ -1,13 +1,15 @@
-
-
 pub mod Errors {
+    pub enum NewError {
+        NotEnoughPlayers,
+        ImpossibleWinLength,
+        InvalidDimensions,
+    }
     pub enum PutError {
         IndexOutOfBounds,
         PositionNotEmpty,
-        PlayerOutOfRange
+        PlayerOutOfRange,
     }
 }
-
 
 pub enum Tile {
     Empty,
@@ -29,20 +31,37 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn new(width: usize, height: usize, win_length: usize, players: usize) -> Game {
+    pub fn new(
+        width: usize,
+        height: usize,
+        win_length: usize,
+        players: usize,
+    ) -> Result<Game, Errors::NewError> {
+        if players < 2 {
+            return Err(Errors::NewError::NotEnoughPlayers);
+        }
+
+        if width == 0 || height == 0 {
+            return Err(Errors::NewError::InvalidDimensions);
+        }
+
+        if win_length > height && win_length > width {
+            return Err(Errors::NewError::ImpossibleWinLength);
+        }
+
         let mut board = Vec::new();
 
         for _ in 0..(width * height) {
             board.push(Tile::Empty);
         }
 
-        Game {
+        Ok(Game {
             board,
             width,
             height,
             win_length,
             players,
-        }
+        })
     }
 
     pub fn get(&self, x: usize, y: usize) -> Option<&Tile> {
@@ -57,6 +76,7 @@ impl Game {
         if player >= self.players {
             return Err(Errors::PutError::PlayerOutOfRange);
         }
+
         if let Some(tile) = self.get(x, y) {
             if let Tile::Empty = tile {
                 self.board[y * self.width + x] = Tile::Player(player);
@@ -116,13 +136,12 @@ impl Game {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn new_game() {
-        let game = Game::new(6,6,4,2);
+        let game = Game::new(6, 6, 4, 2);
     }
 }
