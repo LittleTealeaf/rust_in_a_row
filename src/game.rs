@@ -149,10 +149,6 @@ mod tests {
             },
             "Valid game configurations should return an OK value"
         );
-    }
-
-    #[test]
-    fn new_game_not_enough_players() {
         assert!(
             match Game::new(10, 10, 5, 0) {
                 Err(errors::NewGameError::NotEnoughPlayers) => true,
@@ -160,7 +156,6 @@ mod tests {
             },
             "A new game cannot have 0 players"
         );
-
         assert!(
             match Game::new(10, 10, 5, 1) {
                 Err(errors::NewGameError::NotEnoughPlayers) => true,
@@ -168,10 +163,6 @@ mod tests {
             },
             "A new game cannot have 1 player"
         );
-    }
-
-    #[test]
-    fn new_game_invalid_dimensions() {
         assert!(
             match Game::new(0, 10, 5, 3) {
                 Err(errors::NewGameError::InvalidDimensions) => true,
@@ -187,10 +178,6 @@ mod tests {
             },
             "A new game cannot have 0 height"
         );
-    }
-
-    #[test]
-    fn new_game_impossible_win_length() {
         assert!(
             match Game::new(5, 5, 10, 2) {
                 Err(errors::NewGameError::ImpossibleWinLength) => true,
