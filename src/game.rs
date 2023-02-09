@@ -1,10 +1,10 @@
-pub mod Errors {
-    pub enum NewError {
+pub mod errors {
+    pub enum NewGameError {
         NotEnoughPlayers,
         ImpossibleWinLength,
         InvalidDimensions,
     }
-    pub enum PutError {
+    pub enum PutPlayerError {
         IndexOutOfBounds,
         PositionNotEmpty,
         PlayerOutOfRange,
@@ -36,17 +36,17 @@ impl Game {
         height: usize,
         win_length: usize,
         players: usize,
-    ) -> Result<Game, Errors::NewError> {
+    ) -> Result<Game, errors::NewGameError> {
         if players < 2 {
-            return Err(Errors::NewError::NotEnoughPlayers);
+            return Err(errors::NewGameError::NotEnoughPlayers);
         }
 
         if width == 0 || height == 0 {
-            return Err(Errors::NewError::InvalidDimensions);
+            return Err(errors::NewGameError::InvalidDimensions);
         }
 
         if win_length > height && win_length > width {
-            return Err(Errors::NewError::ImpossibleWinLength);
+            return Err(errors::NewGameError::ImpossibleWinLength);
         }
 
         let mut board = Vec::new();
@@ -72,9 +72,9 @@ impl Game {
         }
     }
 
-    pub fn put(&mut self, x: usize, y: usize, player: usize) -> Result<(), Errors::PutError> {
+    pub fn put(&mut self, x: usize, y: usize, player: usize) -> Result<(), errors::PutPlayerError> {
         if player >= self.players {
-            return Err(Errors::PutError::PlayerOutOfRange);
+            return Err(errors::PutPlayerError::PlayerOutOfRange);
         }
 
         if let Some(tile) = self.get(x, y) {
@@ -82,10 +82,10 @@ impl Game {
                 self.board[y * self.width + x] = Tile::Player(player);
                 Ok(())
             } else {
-                Err(Errors::PutError::PositionNotEmpty)
+                Err(errors::PutPlayerError::PositionNotEmpty)
             }
         } else {
-            Err(Errors::PutError::IndexOutOfBounds)
+            Err(errors::PutPlayerError::IndexOutOfBounds)
         }
     }
 
