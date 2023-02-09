@@ -77,15 +77,15 @@ impl Game {
             return Err(errors::PutPlayerError::PlayerOutOfRange);
         }
 
-        if let Some(tile) = self.get(x, y) {
-            if let Tile::Empty = tile {
-                self.board[y * self.width + x] = Tile::Player(player);
-                Ok(())
-            } else {
-                Err(errors::PutPlayerError::PositionNotEmpty)
-            }
-        } else {
-            Err(errors::PutPlayerError::IndexOutOfBounds)
+        match self.get(x, y) {
+            Some(tile) => match tile {
+                Tile::Empty => {
+                    self.board[y * self.width + x] = Tile::Player(player);
+                    Ok(())
+                }
+                Tile::Player(_) => Err(errors::PutPlayerError::PositionNotEmpty),
+            },
+            None => Err(errors::PutPlayerError::IndexOutOfBounds),
         }
     }
 
