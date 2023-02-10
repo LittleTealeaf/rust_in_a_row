@@ -1,14 +1,12 @@
 
 pub enum CreateGameError {
-    InvalidDimension {
-        width: usize,
-        height: usize
-    },
-    NotEnoughPlayers {
-        players: usize
-    },
-    GoalTooLarge {
-        goal: usize,
-        maximum: usize
-    },
+    DimensionTooSmall,
+    TooFewPlayers,
+    GoalTooSmall,
+    GoalTooLarge
+}
+
+pub enum PlaceMoveError {
+    PositionOutOfRange,
+    TileNotEmpty
 }
