@@ -1,5 +1,10 @@
+use game::Game;
+use term::new_game;
 
-mod core;
+
+mod game;
+mod term;
 
 fn main() {
+    let mut game = new_game();
 }
