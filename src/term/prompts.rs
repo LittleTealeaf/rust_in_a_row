@@ -14,46 +14,17 @@ pub fn read_input() -> Result<String, io::Error> {
 }
 
 pub fn prompt_new_game() -> Result<Game, PromptNewGameError> {
-    let width: usize;
-    let height: usize;
-    let goal: usize;
-    let players: usize;
-
     println!("Board Width");
-    match read_input() {
-        Ok(line) => match line.trim().parse() {
-            Ok(value) => width = value,
-            Err(error) => return Err(PromptNewGameError::ParseError(error)),
-        },
-        Err(error) => return Err(PromptNewGameError::IO(error)),
-    }
+    let width = read_input()?.trim().parse()?;
 
     println!("Board Height");
-    match read_input() {
-        Ok(line) => match line.trim().parse() {
-            Ok(value) => height = value,
-            Err(error) => return Err(PromptNewGameError::ParseError(error)),
-        },
-        Err(error) => return Err(PromptNewGameError::IO(error)),
-    }
+    let height = read_input()?.trim().parse()?;
 
     println!("Goal Length");
-    match read_input() {
-        Ok(line) => match line.trim().parse() {
-            Ok(value) => goal = value,
-            Err(error) => return Err(PromptNewGameError::ParseError(error)),
-        },
-        Err(error) => return Err(PromptNewGameError::IO(error)),
-    }
+    let goal = read_input()?.trim().parse()?;
 
     println!("Player Count");
-    match read_input() {
-        Ok(line) => match line.trim().parse() {
-            Ok(value) => players = value,
-            Err(error) => return Err(PromptNewGameError::ParseError(error)),
-        },
-        Err(error) => return Err(PromptNewGameError::IO(error)),
-    }
+    let players = read_input()?.trim().parse()?;
 
     match Game::create(width, height, goal, players) {
         Ok(game) => Ok(game),
