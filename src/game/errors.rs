@@ -1,4 +1,5 @@
 
+#[derive(Debug)]
 pub enum CreateGameError {
     DimensionTooSmall,
     TooFewPlayers,
@@ -6,6 +7,7 @@ pub enum CreateGameError {
     GoalTooLarge
 }
 
+#[derive(Debug)]
 pub enum PlaceMoveError {
     PositionOutOfRange,
     TileNotEmpty

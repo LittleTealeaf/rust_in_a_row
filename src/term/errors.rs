@@ -1,9 +1,9 @@
-use std::io;
-
 use crate::game::errors::CreateGameError;
+use std::{io, num::ParseIntError};
 
-pub enum NewGameError {
-    InvalidConfigError(CreateGameError),
-    IOError(io::Error),
-    RequestCancelled,
+#[derive(Debug)]
+pub enum PromptNewGameError {
+   CreateGame(CreateGameError),
+   IO(io::Error),
+   ParseError(ParseIntError)
 }
