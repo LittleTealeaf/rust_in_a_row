@@ -26,8 +26,5 @@ pub fn prompt_new_game() -> Result<Game, PromptNewGameError> {
     println!("Player Count");
     let players = read_input()?.trim().parse()?;
 
-    match Game::create(width, height, goal, players) {
-        Ok(game) => Ok(game),
-        Err(error) => Err(PromptNewGameError::CreateGame(error)),
-    }
+    Ok(Game::create(width, height, goal, players)?)
 }
