@@ -28,3 +28,5 @@ pub fn prompt_new_game() -> Result<Game, PromptNewGameError> {
 
     Ok(Game::create(width, height, goal, players)?)
 }
+
+

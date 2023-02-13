@@ -4,5 +4,5 @@ mod game;
 mod term;
 
 fn main() {
-    let game = prompt_new_game();
+    
 }

@@ -14,6 +14,12 @@ pub struct Game {
     state: Vec<Tile>,
 }
 
+pub trait GameTrait {
+    fn get_tile(&self, x: usize, y: usize) -> Option<&Tile>;
+    fn get_turn(&self) -> usize;
+    fn place_move(&mut self, x: usize, y: usize) -> Result<(), PlaceMoveError>;
+}
+
 impl Game {
     fn new(width: usize, height: usize, goal: usize, players: usize) -> Game {
         let mut state = Vec::with_capacity(width * height);
@@ -145,8 +151,8 @@ mod tests {
         }
 
         {
-            let mut game = Game::new(6,6,4,4);
-            assert_eq!(game.get_turn(),0);
+            let mut game = Game::new(6, 6, 4, 4);
+            assert_eq!(game.get_turn(), 0);
             game.next_turn();
             assert_eq!(game.get_turn(), 1);
             game.next_turn();
@@ -157,5 +163,4 @@ mod tests {
             assert_eq!(game.get_turn(), 0);
         }
     }
-
 }
