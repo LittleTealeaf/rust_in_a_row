@@ -25,7 +25,7 @@ impl From<NewCpuGameError> for CreateCpuGameError {
 }
 
 pub struct CpuGame<T: GameTrait> {
-    core_game: T,
+    game: T,
     cpu_players: Vec<usize>,
 }
 
@@ -35,7 +35,7 @@ impl<T: GameTrait> CpuGame<T> {
             Err(NewCpuGameError::CpuPlayerOutOfRange)
         } else {
             Ok(CpuGame {
-                core_game: game,
+                game,
                 cpu_players,
             })
         }
@@ -61,15 +61,15 @@ impl<T: GameTrait> CpuGame<T> {
 
 impl<T: GameTrait> GameTrait for CpuGame<T> {
     fn get_tile(&self, x: usize, y: usize) -> Option<&Tile> {
-        self.core_game.get_tile(x, y)
+        self.game.get_tile(x, y)
     }
 
     fn get_game_state(&self) -> GameState {
-        self.core_game.get_game_state()
+        self.game.get_game_state()
     }
 
     fn play_move(&mut self, x: usize, y: usize) -> Result<(), PlayMoveError> {
-        self.core_game.play_move(x, y)?;
+        self.game.play_move(x, y)?;
 
         while {
             match self.get_game_state() {
@@ -85,22 +85,22 @@ impl<T: GameTrait> GameTrait for CpuGame<T> {
     }
 
     fn get_current_player(&self) -> usize {
-        self.core_game.get_current_player()
+        self.game.get_current_player()
     }
 
     fn get_player_count(&self) -> usize {
-        self.core_game.get_player_count()
+        self.game.get_player_count()
     }
 
     fn get_width(&self) -> usize {
-        self.core_game.get_width()
+        self.game.get_width()
     }
 
     fn get_height(&self) -> usize {
-        self.core_game.get_height()
+        self.game.get_height()
     }
 
     fn get_goal(&self) -> usize {
-        self.core_game.get_goal()
+        self.game.get_goal()
     }
 }

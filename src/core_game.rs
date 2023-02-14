@@ -141,3 +141,41 @@ impl Default for CoreGame {
         Self::new(6, 6, 4, 2)
     }
 }
+
+#[cfg(test)]
+#[allow(unused_must_use)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn get_game_state() {
+        let mut game = CoreGame::default();
+
+        assert!(
+            match game.get_game_state() {
+                GameState::PlayerMove(0) => true,
+                _ => false,
+            },
+            "A new game should start with player 0"
+        );
+
+        game.play_move(0, 0);
+
+        assert!(
+            match game.get_game_state() {
+                GameState::PlayerMove(1) => true,
+                _ => false,
+            },
+            "Playing a move should cause the game state to be the next players move"
+        );
+
+        game.play_move(0,1);
+        game.play_move(1,0);
+        game.play_move(1,1);
+        game.play_move(2,0);
+        game.play_move(2,1);
+        game.play_move(3,0);
+
+        assert!(match game.get_game_state() {GameState::PlayerWon(0) => true, _ => false}, "Player 0 should have won");
+    }
+}
