@@ -1,4 +1,4 @@
-use super::{Tile, GameTrait, GameState, PlayMoveError};
+use super::{GameState, GameTrait, PlayMoveError, Tile};
 
 pub enum CreateGameError {
     TooSmallDimensions,
@@ -11,7 +11,7 @@ pub struct CoreGame {
     turn: usize,
     goal: usize,
     board: Vec<Tile>,
-    state: GameState
+    state: GameState,
 }
 
 impl CoreGame {
@@ -29,7 +29,7 @@ impl CoreGame {
             players,
             goal,
             turn: 0,
-            state: GameState::InProgress
+            state: GameState::InProgress,
         }
     }
 
@@ -50,6 +50,7 @@ impl CoreGame {
         self.board[y + self.width * x] = tile;
     }
 }
+
 //
 // impl GameTrait for CoreGame {
 //     fn get_tile(&self, x: usize, y: usize) -> Option<&Tile> {
