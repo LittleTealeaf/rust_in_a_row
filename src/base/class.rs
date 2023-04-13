@@ -21,7 +21,6 @@ impl CoreGame {
         for _ in 0..state_length {
             board.push(Tile::Empty);
         }
-
         CoreGame {
             board,
             width,
